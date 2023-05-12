@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+  <h1>Take a Picture</h1>
+  <input type="button" id="take-picture" value="Take Picture">
+  <canvas id="canvas" width="640" height="480"></canvas>
+  <script>
+    function takePicture() {
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      var mediaStream = navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "user"
+        }
+      });
+      mediaStream.then(function(stream) {
+        var video = document.createElement("video");
+        video.srcObject = stream;
+        video.style.display = "block";
+        document.body.appendChild(video);
+        video.addEventListener("canplay", function() {
+          ctx.drawImage(video, 0, 0);
+        });
+        document.getElementById("take-picture").addEventListener("click", function() {
+          var image = canvas.toDataURL("image/jpeg");
+          alert("Just took a picture");
+          // Do something with the image, such as upload it to a server or save it to the device's photo library.
+        });
+      });
+    }
+  </script>
+</body>
+</html>
